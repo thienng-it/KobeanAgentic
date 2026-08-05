@@ -28,7 +28,7 @@ export default function DashboardPage() {
     ponytailScore: 98.5
   });
   const [loading, setLoading] = useState(true);
-  const [triggering, setTriggering] = useState(false);
+  const [syncing, setSyncing] = useState(false);
 
   const fetchRealData = async () => {
     try {
@@ -53,27 +53,10 @@ export default function DashboardPage() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleTriggerPipeline = async () => {
-    setTriggering(true);
-    try {
-      const res = await fetch('/api/workflows', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: 'Implement Resilient Request Rate Limiter',
-          description: 'Auto-generated rate limiter module for KobeanREST API.'
-        })
-      });
-      const data = await res.json();
-      if (data.success) {
-        setRuns((prev) => [data.run, ...prev]);
-        fetchRealData();
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setTriggering(false);
-    }
+  const handleSyncPipeline = async () => {
+    setSyncing(true);
+    await fetchRealData();
+    setTimeout(() => setSyncing(false), 1000);
   };
 
   return (
@@ -87,21 +70,21 @@ export default function DashboardPage() {
               thienng-it/KobeanREST Live
             </span>
           </h1>
-          <p className="text-gray-400 text-sm mt-1">Real-time status of Temporal workflows, MicroVM TDD sandboxes, and PR publishing for <strong>thienng-it/KobeanREST</strong>.</p>
+          <p className="text-gray-400 text-sm mt-1">Real-time monitoring of user GitHub issues, MicroVM TDD sandboxes, and automated PR delivery.</p>
         </div>
         <button
-          onClick={handleTriggerPipeline}
-          disabled={triggering}
+          onClick={handleSyncPipeline}
+          disabled={syncing}
           className="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-semibold text-white transition glow-accent disabled:opacity-50 flex items-center justify-center space-x-2"
         >
-          <span>{triggering ? 'Building Real PR...' : '🚀 Trigger Real AI Pipeline Run'}</span>
+          <span>{syncing ? 'Syncing GitHub Status...' : '🔄 Sync & Refresh Pipeline Status'}</span>
         </button>
       </div>
 
       {/* Metrics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="glass-panel p-5 rounded-xl">
-          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Active Repo Issues & PRs</span>
+          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Active GitHub Issues & PRs</span>
           <div className="text-3xl font-extrabold text-white mt-2">{metrics.activeWorkflows}</div>
           <span className="text-xs text-emerald-400 font-medium mt-1 inline-block">↑ Live GitHub API Sync</span>
         </div>
@@ -111,7 +94,7 @@ export default function DashboardPage() {
           <span className="text-xs text-gray-400 mt-1 inline-block">MicroVM Sandbox Runner</span>
         </div>
         <div className="glass-panel p-5 rounded-xl">
-          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Generated Pull Requests</span>
+          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Automated Pull Requests</span>
           <div className="text-3xl font-extrabold text-indigo-400 mt-2">{metrics.generatedPRs}</div>
           <span className="text-xs text-gray-400 mt-1 inline-block">thienng-it/KobeanREST</span>
         </div>
