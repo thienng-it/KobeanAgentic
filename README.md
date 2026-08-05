@@ -11,13 +11,23 @@ An enterprise-grade, zero-touch autonomous AI engineering platform that transfor
 
 ---
 
+## ⚡ 1-Command Setup & Launch
+
+Run **1 single command** to install dependencies, verify system health, and configure Webhooks automatically:
+
+```bash
+pnpm run setup
+```
+
+---
+
 ## 📌 Quick Summary
 
 - 🎯 **What it does**: Automatically writes code, runs unit tests, and opens GitHub Pull Requests when an issue is labeled `ai-build`.
 - 💵 **Cost**: **$0 (100% Free)**.
 - 🔒 **Privacy**: **100% Offline & Private**. Code processing stays on your machine.
 - 🧠 **Dynamic AI Engine**: Auto-discovers whichever local model is installed on the user's computer (`llama3`, `qwen2.5-coder`, `gemma3:12b`, `mistral-nemo`).
-- ⚡ **Setup Time**: **60 Seconds**.
+- ⚡ **Setup Time**: **1 Command**.
 
 ---
 
@@ -65,11 +75,11 @@ pipeline:
 
 ## 🖥️ Step-by-Step Guide 2: How to Run & Test the Platform Locally
 
-### Step 1: Clone & Install Dependencies
+### Step 1: Clone & Run 1-Command Setup
 ```bash
 git clone https://github.com/thienng-it/KobeanAgentic.git
 cd KobeanAgentic
-pnpm install
+pnpm run setup
 ```
 
 ### Step 2: Run Automated Test Suites
@@ -185,6 +195,7 @@ flowchart TD
 │   │       ├── contents/       # GitHub/Jira DOM overlay action buttons
 │   │       └── background/     # Service worker background API client
 ├── scripts/
+│   ├── setup.ts                # 1-Command setup and health verification script
 │   └── e2e_dry_run.ts          # End-to-End dry run execution script
 ├── pnpm-workspace.yaml         # PNPM workspace configuration
 ├── package.json                # Monorepo root package definition
