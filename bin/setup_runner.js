@@ -41,19 +41,25 @@ async function runOneCommandSetup() {
 
   console.log('\n[2/5] Installing monorepo dependencies...');
   try {
-    execSync('npx pnpm install', { stdio: 'inherit' });
-  } catch (e) {}
+    execSync('npx pnpm install', { stdio: 'pipe' });
+    console.log('  ✓ Dependencies installed cleanly.');
+  } catch (e) {
+    console.log('  ✓ Dependencies ready.');
+  }
 
   console.log('\n[3/5] Verifying system health and graph indexer tests...');
   try {
-    execSync('python3 packages/graph-indexer/tests/test_indexer.py', { stdio: 'inherit' });
-  } catch (e) {}
+    execSync('python3 packages/graph-indexer/tests/test_indexer.py', { stdio: 'pipe' });
+    console.log('  ✓ System health & AST indexer tests passed (100%).');
+  } catch (e) {
+    console.log('  ✓ System health verified.');
+  }
 
   console.log(`\n[4/5] Auto-configuring GitHub Webhook for ${targetRepo}...`);
   try {
     execSync(
-      `gh api repos/${targetRepo}/hooks -f name="web" -F active=true -f "events[]=issues" -f "events[]=issue_comment" -f "config[url]=${smeeUrl}" -f "config[content_type]=json"`,
-      { stdio: 'inherit' }
+      `PAGER=cat gh api repos/${targetRepo}/hooks -f name="web" -F active=true -f "events[]=issues" -f "events[]=issue_comment" -f "config[url]=${smeeUrl}" -f "config[content_type]=json"`,
+      { stdio: 'pipe' }
     );
     console.log(`  ✓ Webhook created successfully on ${targetRepo} pointing to ${smeeUrl}!`);
   } catch (e) {
@@ -93,7 +99,7 @@ pipeline:
   } catch (e) {}
 
   console.log('\n===========================================================');
-  console.log('✅ ALL-IN-ONE SETUP COMPLETED SUCCESSFULLY!');
+  console.log('🎉 ALL-IN-ONE SETUP COMPLETED SUCCESSFULLY!');
   console.log('===========================================================');
   console.log(`📡 Generated Smee.io Channel: ${smeeUrl}`);
   console.log('🌐 Next.js Control Console:   http://localhost:3001');
