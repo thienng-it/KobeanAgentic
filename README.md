@@ -49,21 +49,6 @@ npx @thienng-it/kobean-agentic setup thienng-it/KobeanREST
 
 ---
 
-## 🚀 How to Publish Package to NPM Registry
-
-To publish to NPM:
-
-1. **Log in to NPM in your terminal**:
-   ```bash
-   npm login
-   ```
-2. **Publish Package**:
-   ```bash
-   npm publish --access public
-   ```
-
----
-
 ## 📌 Quick Summary
 
 - 🎯 **What it does**: Automatically writes code, runs unit tests, and opens GitHub Pull Requests when an issue is labeled `ai-build`.
