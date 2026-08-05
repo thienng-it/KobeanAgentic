@@ -31,9 +31,15 @@ async function runOneCommandSetup() {
     targetRepo = await question('\n👉 Enter your target GitHub repository (e.g. thienng-it/KobeanREST): ');
   }
   targetRepo = (targetRepo || 'thienng-it/KobeanREST').trim();
+
+  let deliveryChoice = '1';
+  if (process.stdin.isTTY) {
+    deliveryChoice = await question('\n👉 Select Delivery Mode:\n   [1] Create Pull Request (Recommended for Team Review)\n   [2] Direct Push to Main/Master Branch\n   Select (1 or 2): ');
+  }
   rl.close();
 
-  console.log(`\n🎯 Target Repository Selected: "${targetRepo}"`);
+  const deliveryMode = deliveryChoice.trim() === '2' ? 'direct_push' : 'pr';
+  console.log(`\n🎯 Target Repository: "${targetRepo}" | Delivery Mode: "${deliveryMode}"`);
 
   console.log('\n[1/5] Auto-generating dedicated Smee.io Webhook Proxy Channel...');
   const smeeUrl = await createSmeeChannel();
@@ -73,6 +79,7 @@ version: "1.0"
 pipeline:
   repository: "${targetRepo}"
   base_branch: "main"
+  delivery_mode: "${deliveryMode}" # "pr" | "direct_push"
 
   sandbox:
     isolation: "docker"
@@ -88,7 +95,7 @@ pipeline:
     reviewer_model: "ollama/auto"
 
   github:
-    auto_pr: true
+    auto_pr: ${deliveryMode === 'pr'}
     trigger_label: "ai-build"
     comment_trigger: "@ai-pipeline fix"
 `;
@@ -102,6 +109,7 @@ pipeline:
   console.log('🎉 ALL-IN-ONE SETUP COMPLETED SUCCESSFULLY!');
   console.log('===========================================================');
   console.log(`📡 Generated Smee.io Channel: ${smeeUrl}`);
+  console.log(`🚀 Delivery Mode Configured:  ${deliveryMode.toUpperCase()}`);
   console.log('🌐 Next.js Control Console:   http://localhost:3001');
   console.log(`⚡ Ready! Create an Issue on ${targetRepo} & add "ai-build" label!`);
   console.log('===========================================================');
