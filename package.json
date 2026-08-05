@@ -4,8 +4,12 @@
   "private": true,
   "type": "module",
   "description": "Zero-touch Enterprise AI Pipeline Platform Monorepo",
+  "bin": {
+    "kobean-agentic": "./bin/kobean-agentic.js"
+  },
   "scripts": {
-    "setup": "node --experimental-strip-types scripts/setup.ts",
+    "kobean-agentic": "node ./bin/kobean-agentic.js",
+    "setup": "node ./bin/kobean-agentic.js setup",
     "build": "pnpm --recursive run build",
     "test": "pnpm --recursive run test",
     "lint": "pnpm --recursive run lint",

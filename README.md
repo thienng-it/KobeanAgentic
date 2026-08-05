@@ -13,10 +13,10 @@ An enterprise-grade, zero-touch autonomous AI engineering platform that transfor
 
 ## ⚡ 1-Command Interactive Setup & Launch
 
-Run **1 single command** to install dependencies, verify system health, and configure Webhooks automatically:
+Run **`kobean-agentic setup`** to install dependencies, verify system health, and configure Webhooks automatically:
 
 ```bash
-pnpm run setup
+kobean-agentic setup
 ```
 
 When prompted in terminal, enter your target GitHub repository (e.g. `your-username/your-repo`):
@@ -26,7 +26,7 @@ When prompted in terminal, enter your target GitHub repository (e.g. `your-usern
 
 *Or pass your target repo directly in 1 line:*
 ```bash
-pnpm run setup thienng-it/KobeanREST
+kobean-agentic setup thienng-it/KobeanREST
 ```
 
 ---
@@ -38,14 +38,14 @@ pnpm run setup thienng-it/KobeanREST
 - 🔒 **Privacy**: **100% Offline & Private**. Code processing stays on your machine.
 - 🧠 **Dynamic Local AI**: Auto-discovers whichever local model is installed on the user's computer (`llama3`, `qwen2.5-coder`, `gemma3:12b`, `mistral-nemo`).
 - 🔄 **Self-Correction & Memory**: Automatically self-repairs code diffs and remembers past issue resolutions.
-- ⚡ **Setup Time**: **1 Command**.
+- ⚡ **Setup Time**: **1 Command (`kobean-agentic setup`)**.
 
 ---
 
 ## ⚡ Step-by-Step Guide 1: How to Connect to ANY Repository (60 Seconds)
 
 ### Step 1: Add `.ai-pipeline.yml` to Your Repo Root *(30 Seconds)*
-Create **1 single file** named `.ai-pipeline.yml` in the root directory of your project (or let `pnpm run setup` auto-generate it):
+Create **1 single file** named `.ai-pipeline.yml` in the root directory of your project (or let `kobean-agentic setup` auto-generate it):
 
 ```yaml
 version: "1.0"
@@ -99,11 +99,11 @@ Leave a comment on any open GitHub Pull Request containing `@ai-pipeline fix` to
 
 ## 🖥️ Step-by-Step Guide 2: How to Run & Test the Platform Locally
 
-### Step 1: Clone & Run Interactive 1-Command Setup
+### Step 1: Clone & Run 1-Command Setup
 ```bash
 git clone https://github.com/thienng-it/KobeanAgentic.git
 cd KobeanAgentic
-pnpm run setup
+kobean-agentic setup
 ```
 
 ### Step 2: Run Automated Test Suites
@@ -112,12 +112,12 @@ pnpm run setup
 python3 packages/graph-indexer/tests/test_indexer.py
 
 # Run 1-Command E2E Dry Run Execution Script
-node --experimental-strip-types scripts/e2e_dry_run.ts
+kobean-agentic dry-run
 ```
 
 ### Step 3: Launch Next.js Management Control Console
 ```bash
-npx pnpm --filter @enterprise-ai/control-console dev
+kobean-agentic dev
 ```
 Open **`http://localhost:3001`** in your browser to view active workflows, live logs, and the interactive Temporal Workflow DAG.
 
@@ -185,6 +185,8 @@ flowchart TD
 
 ```text
 .
+├── bin/
+│   └── kobean-agentic.js       # CLI binary executable (kobean-agentic setup)
 ├── .agents/
 │   ├── skills/                 # AGY repository custom skills
 │   └── rules/                  # AGY coding & guardrail rules
