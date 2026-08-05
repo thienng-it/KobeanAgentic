@@ -1,6 +1,6 @@
 {
   "name": "@josephnguyent/kobean-agentic",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Zero-touch Enterprise AI Pipeline Platform & CLI",
   "type": "module",
   "main": "bin/kobean-agentic.js",

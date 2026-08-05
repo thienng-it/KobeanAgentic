@@ -1,0 +1,49 @@
+# .betterleak configuration for KobeanAgentic
+version: "1.0"
+scanner:
+  enabled: true
+  fail_on_leak: true
+  severity_threshold: "high"
+
+rules:
+  - id: openai-api-key
+    name: "OpenAI API Key Leak"
+    regex: "sk-[a-zA-Z0-9]{32,}"
+    severity: "critical"
+
+  - id: anthropic-api-key
+    name: "Anthropic API Key Leak"
+    regex: "sk-ant-[a-zA-Z0-9_-]{32,}"
+    severity: "critical"
+
+  - id: google-gemini-key
+    name: "Google Gemini API Key Leak"
+    regex: "AIzaSy[a-zA-Z0-9_-]{33}"
+    severity: "critical"
+
+  - id: github-token
+    name: "GitHub Token Leak"
+    regex: "(ghp|gho|ghu|ghs|ghr)_[a-zA-Z0-9]{36}"
+    severity: "critical"
+
+  - id: aws-access-key
+    name: "AWS Access Key Leak"
+    regex: "AKIA[0-9A-Z]{16}"
+    severity: "critical"
+
+  - id: private-rsa-key
+    name: "Private SSH/RSA Key Leak"
+    regex: "-----BEGIN (RSA|EC|OPENSSH|PRIVATE) KEY-----"
+    severity: "critical"
+
+  - id: database-credentials
+    name: "Hardcoded Database Credentials"
+    regex: "(postgres|mysql|mongodb(\\+srv)?):\\/\\/[^:]+:[^@]+@"
+    severity: "high"
+
+ignore_paths:
+  - ".ai-memory/*"
+  - "node_modules/*"
+  - "pnpm-lock.yaml"
+  - "dist/*"
+  - "*.test.ts"

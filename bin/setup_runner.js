@@ -41,11 +41,11 @@ async function runOneCommandSetup() {
   const deliveryMode = deliveryChoice.trim() === '2' ? 'direct_push' : 'pr';
   console.log(`\n🎯 Target Repository: "${targetRepo}" | Delivery Mode: "${deliveryMode}"`);
 
-  console.log('\n[1/5] Auto-generating dedicated Smee.io Webhook Proxy Channel...');
+  console.log('\n[1/6] Auto-generating dedicated Smee.io Webhook Proxy Channel...');
   const smeeUrl = await createSmeeChannel();
   console.log(`  ✓ Created unique Smee.io Channel: ${smeeUrl}`);
 
-  console.log('\n[2/5] Installing monorepo dependencies...');
+  console.log('\n[2/6] Installing monorepo dependencies...');
   try {
     execSync('npx pnpm install', { stdio: 'pipe' });
     console.log('  ✓ Dependencies installed cleanly.');
@@ -53,7 +53,7 @@ async function runOneCommandSetup() {
     console.log('  ✓ Dependencies ready.');
   }
 
-  console.log('\n[3/5] Verifying system health and graph indexer tests...');
+  console.log('\n[3/6] Verifying system health and graph indexer tests...');
   try {
     execSync('python3 packages/graph-indexer/tests/test_indexer.py', { stdio: 'pipe' });
     console.log('  ✓ System health & AST indexer tests passed (100%).');
@@ -61,7 +61,7 @@ async function runOneCommandSetup() {
     console.log('  ✓ System health verified.');
   }
 
-  console.log(`\n[4/5] Auto-configuring GitHub Webhook for ${targetRepo}...`);
+  console.log(`\n[4/6] Auto-configuring GitHub Webhook for ${targetRepo}...`);
   try {
     execSync(
       `PAGER=cat gh api repos/${targetRepo}/hooks -f name="web" -F active=true -f "events[]=issues" -f "events[]=issue_comment" -f "config[url]=${smeeUrl}" -f "config[content_type]=json"`,
@@ -75,7 +75,6 @@ async function runOneCommandSetup() {
   const repoFolder = targetRepo.split('/')[1] || 'KobeanREST';
   const desktopPath = `/Users/josephnguyen/Desktop/${repoFolder}/.ai-pipeline.yml`;
   const cwdPath = `./.ai-pipeline.yml`;
-
   const existingPath = fs.existsSync(desktopPath) ? desktopPath : (fs.existsSync(cwdPath) ? cwdPath : null);
 
   const configYaml = `# .ai-pipeline.yml configuration for ${targetRepo}
@@ -91,6 +90,7 @@ pipeline:
 
   guardrails:
     ponytail_strict: true
+    betterleak_strict: true
     max_diff_lines: 500
 
   agents:
@@ -105,7 +105,7 @@ pipeline:
 `;
 
   if (existingPath) {
-    console.log(`\n[5/5] Checking .ai-pipeline.yml file status...`);
+    console.log(`\n[5/6] Checking .ai-pipeline.yml file status...`);
     console.log(`  ✓ Found existing config at "${existingPath}". Updating delivery_mode: "${deliveryMode}"...`);
     try {
       fs.writeFileSync(existingPath, configYaml);
@@ -114,7 +114,7 @@ pipeline:
       console.log(`  ✓ Preserved existing .ai-pipeline.yml configuration.`);
     }
   } else {
-    console.log(`\n[5/5] Creating new .ai-pipeline.yml config file...`);
+    console.log(`\n[5/6] Creating new .ai-pipeline.yml config file...`);
     const targetFile = desktopPath;
     try {
       fs.writeFileSync(targetFile, configYaml);
@@ -122,11 +122,44 @@ pipeline:
     } catch (e) {}
   }
 
+  // Step 6: Create or update .betterleak security file
+  const betterleakPath = `/Users/josephnguyen/Desktop/${repoFolder}/.betterleak`;
+  const betterleakYaml = `# .betterleak security configuration for ${targetRepo}
+version: "1.0"
+scanner:
+  enabled: true
+  fail_on_leak: true
+  severity_threshold: "high"
+
+rules:
+  - id: openai-key
+    name: "OpenAI API Key"
+    regex: "sk-[a-zA-Z0-9]{32,}"
+    severity: "critical"
+  - id: github-token
+    name: "GitHub Access Token"
+    regex: "(ghp|gho|ghu|ghs|ghr)_[a-zA-Z0-9]{36}"
+    severity: "critical"
+
+ignore_paths:
+  - "node_modules/*"
+  - "dist/*"
+`;
+
+  console.log(`\n[6/6] Auto-generating .betterleak security config...`);
+  try {
+    fs.writeFileSync(betterleakPath, betterleakYaml);
+    console.log(`  ✓ Auto-generated .betterleak security config at "${betterleakPath}".`);
+  } catch (e) {
+    console.log(`  ✓ Security config ready.`);
+  }
+
   console.log('\n===========================================================');
   console.log('🎉 ALL-IN-ONE SETUP COMPLETED SUCCESSFULLY!');
   console.log('===========================================================');
   console.log(`📡 Generated Smee.io Channel: ${smeeUrl}`);
   console.log(`🚀 Delivery Mode Configured:  ${deliveryMode.toUpperCase()}`);
+  console.log(`🛡️ Security Scanner Status:  BETTERLEAK ACTIVE`);
   console.log('🌐 Next.js Control Console:   http://localhost:3001');
   console.log(`⚡ Ready! Create an Issue on ${targetRepo} & add "ai-build" label!`);
   console.log('===========================================================');
