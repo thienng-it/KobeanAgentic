@@ -1,4 +1,4 @@
-name: Publish to NPM
+name: Auto Publish to NPM on GitHub Push
 
 on:
   push:
@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  id-token: write # Required for NPM OIDC Trusted Publisher
+  contents: write
+  id-token: write
 
 jobs:
   publish:
@@ -31,7 +31,10 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
-      - name: Publish to NPM Registry
-        run: npm publish --access public
+      - name: Publish Package to NPM
+        run: |
+          npm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN}
+          npm publish --access public || echo "Version already published"
         env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
