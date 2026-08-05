@@ -13,7 +13,7 @@ An enterprise-grade, zero-touch autonomous AI engineering platform that transfor
 
 ## ⚡ 1-Command Interactive Setup & Launch
 
-Run **`kobean-agentic setup`** to install dependencies, verify system health, and configure Webhooks automatically:
+Run **`kobean-agentic setup`** to install dependencies, auto-create a dedicated Smee.io channel, and configure Webhooks automatically:
 
 ```bash
 kobean-agentic setup
@@ -36,6 +36,7 @@ kobean-agentic setup thienng-it/KobeanREST
 - 🎯 **What it does**: Automatically writes code, runs unit tests, and opens GitHub Pull Requests when an issue is labeled `ai-build`.
 - 💵 **Cost**: **$0 (100% Free)**.
 - 🔒 **Privacy**: **100% Offline & Private**. Code processing stays on your machine.
+- 📡 **Automated Webhook Channels**: Automatically creates a dedicated Smee.io Webhook channel programmatically.
 - 🧠 **Dynamic Local AI**: Auto-discovers whichever local model is installed on the user's computer (`llama3`, `qwen2.5-coder`, `gemma3:12b`, `mistral-nemo`).
 - 🔄 **Self-Correction & Memory**: Automatically self-repairs code diffs and remembers past issue resolutions.
 - ⚡ **Setup Time**: **1 Command (`kobean-agentic setup`)**.
@@ -44,8 +45,11 @@ kobean-agentic setup thienng-it/KobeanREST
 
 ## ⚡ Step-by-Step Guide 1: How to Connect to ANY Repository (60 Seconds)
 
-### Step 1: Add `.ai-pipeline.yml` to Your Repo Root *(30 Seconds)*
-Create **1 single file** named `.ai-pipeline.yml` in the root directory of your project (or let `kobean-agentic setup` auto-generate it):
+### Step 1: Run 1-Command Setup *(30 Seconds)*
+Run `kobean-agentic setup your-username/your-repo`. The CLI automatically:
+1. Auto-generates your dedicated **Smee.io Webhook Proxy Channel**.
+2. Registers the Webhook on your GitHub repository via GitHub CLI.
+3. Creates the `.ai-pipeline.yml` configuration file in your project root!
 
 ```yaml
 version: "1.0"
@@ -67,17 +71,7 @@ pipeline:
     comment_trigger: "@ai-pipeline fix"
 ```
 
-### Step 2: Add Webhook URL to GitHub *(30 Seconds)*
-1. Go to your repository settings on GitHub:
-   👉 **`https://github.com/your-username/your-repo/settings/hooks`**
-2. Click **Add webhook**.
-3. Fill in these settings:
-   - **Payload URL**: `https://smee.io/KShRqrPDcgLv6` *(or your server URL)*
-   - **Content type**: `application/json`
-   - **Which events?**: Select **"Let me select individual events"** $\rightarrow$ Check **Issues** and **Issue comments**.
-4. Click **Add webhook**.
-
-### Step 3: Create an Issue & Add `ai-build` Label 🎉
+### Step 2: Create an Issue & Add `ai-build` Label 🎉
 1. Create an Issue on your GitHub repository (e.g., *"Add JWT auth middleware"*).
 2. Add the **`ai-build`** label.
 3. The platform automatically scans your codebase, writes TDD unit tests, and **opens a ready-to-merge Pull Request**!
@@ -86,13 +80,16 @@ pipeline:
 
 ## 🏛️ Principal Architectural Features
 
-### 1. Iterative Self-Correction & Guardrail Loop
+### 1. Automated Smee.io Webhook Channel Generation
+Generates a dedicated, isolated Smee.io proxy channel programmatically (`https://smee.io/new`) during setup without requiring manual browser navigation or manual URL copying.
+
+### 2. Iterative Self-Correction & Guardrail Loop
 If a generated code diff fails unit tests or Ponytail guardrails, the Coder Agent automatically analyzes the audit feedback and **repairs its own code diff** before publishing to GitHub.
 
-### 2. Persistent Repository Context Memory
+### 3. Persistent Repository Context Memory
 Stores past issue trajectories, AST context symbols, and resolution patterns in `.ai-memory/repository_memory.json`. The AI gets **progressively smarter** with every PR generated!
 
-### 3. PR Comment Self-Repair Listener (`@ai-pipeline fix`)
+### 4. PR Comment Self-Repair Listener (`@ai-pipeline fix`)
 Leave a comment on any open GitHub Pull Request containing `@ai-pipeline fix` to trigger the self-repair loop and automatically update the PR.
 
 ---
@@ -225,7 +222,7 @@ flowchart TD
 │   │       ├── contents/       # GitHub/Jira DOM overlay action buttons
 │   │       └── background/     # Service worker background API client
 ├── scripts/
-│   ├── setup.ts                # 1-Command interactive setup script
+│   ├── setup.ts                # 1-Command interactive setup script with auto Smee generation
 │   └── e2e_dry_run.ts          # End-to-End dry run execution script
 ├── pnpm-workspace.yaml         # PNPM workspace configuration
 ├── package.json                # Monorepo root package definition
