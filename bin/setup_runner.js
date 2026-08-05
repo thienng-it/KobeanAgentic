@@ -10,6 +10,26 @@ const rl = readline.createInterface({
 const question = (query) =>
   new Promise((resolve) => rl.question(query, resolve));
 
+function detectCurrentRepo() {
+  try {
+    const remoteUrl = execSync('git config --get remote.origin.url', { stdio: 'pipe' }).toString().trim();
+    const match = remoteUrl.match(/github\.com[:\/]([^\/]+\/[^\/\.]+)(\.git)?$/);
+    if (match && match[1]) {
+      return match[1];
+    }
+  } catch (e) {}
+  return null;
+}
+
+function normalizeRepoName(input) {
+  if (!input) return '';
+  const match = input.match(/github\.com[:\/]([^\/]+\/[^\/\.]+)(\.git)?$/);
+  if (match && match[1]) {
+    return match[1];
+  }
+  return input.replace(/^https?:\/\/github\.com\//, '').replace(/\.git$/, '').trim();
+}
+
 async function createSmeeChannel() {
   try {
     const res = await fetch('https://smee.io/new', { method: 'HEAD', redirect: 'manual' });
@@ -26,11 +46,24 @@ async function runOneCommandSetup() {
   console.log('🚀 ENTERPRISE AI PIPELINE PLATFORM: 1-COMMAND SETUP');
   console.log('===========================================================');
 
+  const detectedRepo = detectCurrentRepo();
   let targetRepo = process.argv[2];
-  if (!targetRepo && process.stdin.isTTY) {
-    targetRepo = await question('\n👉 Enter your target GitHub repository (e.g. thienng-it/KobeanREST): ');
+
+  if (!targetRepo) {
+    if (detectedRepo) {
+      console.log(`\n🔍 Auto-detected Git Repository: "${detectedRepo}"`);
+    }
+
+    if (process.stdin.isTTY) {
+      const defaultPrompt = detectedRepo ? ` [Default: ${detectedRepo}]` : ' (e.g. thienng-it/KobeanREST)';
+      const input = await question(`\n👉 Enter target GitHub repository${defaultPrompt}: `);
+      targetRepo = input.trim() || detectedRepo || 'thienng-it/KobeanREST';
+    } else {
+      targetRepo = detectedRepo || 'thienng-it/KobeanREST';
+    }
   }
-  targetRepo = (targetRepo || 'thienng-it/KobeanREST').trim();
+
+  targetRepo = normalizeRepoName(targetRepo);
 
   let deliveryChoice = '1';
   if (process.stdin.isTTY) {
@@ -122,7 +155,6 @@ pipeline:
     } catch (e) {}
   }
 
-  // Step 6: Create or update .betterleak security file
   const betterleakPath = `/Users/josephnguyen/Desktop/${repoFolder}/.betterleak`;
   const betterleakYaml = `# .betterleak security configuration for ${targetRepo}
 version: "1.0"
