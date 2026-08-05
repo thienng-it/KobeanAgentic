@@ -2,6 +2,7 @@ export * from './types/index.ts';
 export * from './guardrails/ponytail.ts';
 export * from './sandbox/e2b_runner.ts';
 export * from './sandbox/ollama_client.ts';
+export * from './sandbox/ai_provider_adapter.ts';
 export * from './memory/context_memory.ts';
 export * from './agents/planner.ts';
 export * from './agents/coder.ts';

@@ -5,7 +5,7 @@
 [![Python Version](https://img.shields.io/badge/python-%3E%3D3.10-blue.svg)](https://www.python.org)
 [![Monorepo: pnpm](https://img.shields.io/badge/monorepo-pnpm-orange.svg)](https://pnpm.io)
 [![Next.js 15](https://img.shields.io/badge/dashboard-Next.js%2015-black.svg)](https://nextjs.org)
-[![Offline AI: Ollama](https://img.shields.io/badge/local%20ai-Ollama%20Auto--Discovery-purple.svg)](https://ollama.com)
+[![AI Providers: Cloud & Local](https://img.shields.io/badge/ai%20providers-Cloud%20API%20%2B%20Local%20Ollama-purple.svg)](https://ollama.com)
 
 An enterprise-grade, zero-touch autonomous AI engineering platform that transforms GitHub issues into verified, test-proven Pull Requests automatically.
 
@@ -34,12 +34,39 @@ kobean-agentic setup thienng-it/KobeanREST
 ## 📌 Quick Summary
 
 - 🎯 **What it does**: Automatically writes code, runs unit tests, and opens GitHub Pull Requests when an issue is labeled `ai-build`.
-- 💵 **Cost**: **$0 (100% Free)**.
-- 🔒 **Privacy**: **100% Offline & Private**. Code processing stays on your machine.
+- 🤖 **Universal AI Support**: Supports **Cloud AI Keys** (OpenAI / ChatGPT, Anthropic / Claude, Google / Gemini, DeepSeek) AND **Local Offline Ollama** (`$0` free).
+- 🔒 **Privacy**: Code processing stays local or uses your configured cloud API keys.
 - 📡 **Automated Webhook Channels**: Automatically creates a dedicated Smee.io Webhook channel programmatically.
-- 🧠 **Dynamic Local AI**: Auto-discovers whichever local model is installed on the user's computer (`llama3`, `qwen2.5-coder`, `gemma3:12b`, `mistral-nemo`).
 - 🔄 **Self-Correction & Memory**: Automatically self-repairs code diffs and remembers past issue resolutions.
 - ⚡ **Setup Time**: **1 Command (`kobean-agentic setup`)**.
+
+---
+
+## 🔑 How to Configure Cloud AI API Keys or Local Ollama
+
+You can supply API keys via environment variables, `.env`, or repository settings:
+
+### 1️⃣ Cloud AI API Keys (Optional)
+
+Set any of these environment variables in your terminal or `.env` file:
+
+```bash
+# OpenAI (ChatGPT: gpt-4o, gpt-4o-mini)
+export OPENAI_API_KEY="sk-..."
+
+# Anthropic (Claude: claude-3-5-sonnet)
+export ANTHROPIC_API_KEY="sk-ant-..."
+
+# Google Gemini (gemini-1.5-flash, gemini-1.5-pro)
+export GEMINI_API_KEY="AIzaSy..."
+
+# DeepSeek (deepseek-chat, deepseek-coder)
+export DEEPSEEK_API_KEY="sk-..."
+```
+
+### 2️⃣ Local & Offline Mode (Ollama - $0 Free)
+
+If no Cloud API Keys are set, the platform **automatically falls back to Local Ollama Auto-Discovery** on `http://localhost:11434` (`gemma3:12b`, `qwen2.5-coder`, `llama3`, `mistral-nemo`).
 
 ---
 
@@ -80,17 +107,17 @@ pipeline:
 
 ## 🏛️ Principal Architectural Features
 
-### 1. Automated Smee.io Webhook Channel Generation
-Generates a dedicated, isolated Smee.io proxy channel programmatically (`https://smee.io/new`) during setup without requiring manual browser navigation or manual URL copying.
+### 1. Universal Multi-Provider AI Adapter
+Supports OpenAI (ChatGPT), Anthropic (Claude), Google (Gemini), DeepSeek, and Local Ollama with dynamic fallback.
 
-### 2. Iterative Self-Correction & Guardrail Loop
+### 2. Automated Smee.io Webhook Channel Generation
+Generates a dedicated, isolated Smee.io proxy channel programmatically (`https://smee.io/new`) during setup without requiring manual browser navigation.
+
+### 3. Iterative Self-Correction & Guardrail Loop
 If a generated code diff fails unit tests or Ponytail guardrails, the Coder Agent automatically analyzes the audit feedback and **repairs its own code diff** before publishing to GitHub.
 
-### 3. Persistent Repository Context Memory
+### 4. Persistent Repository Context Memory
 Stores past issue trajectories, AST context symbols, and resolution patterns in `.ai-memory/repository_memory.json`. The AI gets **progressively smarter** with every PR generated!
-
-### 4. PR Comment Self-Repair Listener (`@ai-pipeline fix`)
-Leave a comment on any open GitHub Pull Request containing `@ai-pipeline fix` to trigger the self-repair loop and automatically update the PR.
 
 ---
 
@@ -117,22 +144,6 @@ kobean-agentic dry-run
 kobean-agentic dev
 ```
 Open **`http://localhost:3001`** in your browser to view active workflows, live logs, and the interactive Temporal Workflow DAG.
-
----
-
-## 🧠 Dynamic Per-User Local AI Auto-Discovery
-
-The platform automatically detects whichever local AI model is installed on the user's computer via Ollama (`http://localhost:11434`):
-
-```
-User Computer A (gemma3:12b)      ──► Engine uses gemma3:12b
-User Computer B (qwen2.5-coder) ──► Engine uses qwen2.5-coder
-User Computer C (llama3)         ──► Engine uses llama3
-```
-
-- **Zero Cloud API Keys Required**.
-- **Zero API Costs**.
-- **100% Privacy Guarantee**.
 
 ---
 
@@ -193,7 +204,7 @@ flowchart TD
 │   │   │   ├── agents/         # Planner, TDD Coder (Self-Repair), and Reviewer agents
 │   │   │   ├── memory/         # Persistent context memory store (.ai-memory/)
 │   │   │   ├── guardrails/     # Ponytail Decision Ladder rules
-│   │   │   ├── sandbox/        # MicroVM container & Ollama auto-discovery client
+│   │   │   ├── sandbox/        # Universal Multi-Provider AI Adapter (OpenAI, Claude, Gemini, Ollama)
 │   │   │   ├── types/          # TypeScript interfaces
 │   │   │   └── workflows/      # Temporal pipeline workflow logic
 │   │   └── tests/              # Engine unit test suites

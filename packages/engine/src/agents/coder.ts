@@ -1,6 +1,6 @@
 import type { ExecutionPlan, TDDStageResult } from '../types/index.ts';
 import { executeSandboxCommand } from '../sandbox/e2b_runner.ts';
-import { queryLocalOllama } from '../sandbox/ollama_client.ts';
+import { queryAIProvider } from '../sandbox/ai_provider_adapter.ts';
 import { evaluatePonytailGuardrails } from '../guardrails/ponytail.ts';
 import { RepositoryMemoryStore } from '../memory/context_memory.ts';
 
@@ -14,14 +14,14 @@ export async function runTDDCycle(plan: ExecutionPlan, worktreePath: string): Pr
 
   console.log(`\n🧠 [Agent Memory Context] Loaded ${pastMemories.length} relevant historical context entries.`);
 
-  // Query auto-discovered user local model with context memory
+  // Query universal AI provider adapter (Supports Cloud API Keys & Local Ollama)
   const prompt = `Write TypeScript feature implementation for spec ${plan.specId}.\nPast Context:\n${memoryContext}`;
-  const ollamaCheck = await queryLocalOllama('auto', prompt);
+  const aiResult = await queryAIProvider({ prompt });
 
-  if (!ollamaCheck.success) {
-    console.log(`\n⚠️  [Ollama Status] ${ollamaCheck.error}`);
+  if (!aiResult.success) {
+    console.log(`\n⚠️  [AI Provider Status] ${aiResult.error}`);
   } else {
-    console.log(`\n🟢 [User Local AI Detected] Connected to user's installed model "${ollamaCheck.modelUsed}" via Ollama!`);
+    console.log(`\n🟢 [AI Provider Active] Connected to ${aiResult.providerUsed} (${aiResult.modelUsed})!`);
   }
 
   // Stage 1: RED (Failing test created)
@@ -58,7 +58,6 @@ export async function runTDDCycle(plan: ExecutionPlan, worktreePath: string): Pr
       console.log(`\n✅ [Self-Correction Loop] Code diff passed Ponytail Guardrails on attempt ${attempts} (Score: ${audit.score}/100)`);
     } else {
       console.log(`\n🔄 [Self-Correction Loop] Guardrail violation detected on attempt ${attempts}: ${audit.violations.join(', ')}`);
-      // Auto-repair code diff
       currentCodeDiff = `+ // Auto-repaired by Coder Agent\nexport function handleFeature() { return { status: "OK", spec: "${plan.specId}" }; }`;
     }
   }
