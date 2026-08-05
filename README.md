@@ -11,12 +11,22 @@ An enterprise-grade, zero-touch autonomous AI engineering platform that transfor
 
 ---
 
-## ⚡ 1-Command Setup & Launch
+## ⚡ 1-Command Interactive Setup & Launch
 
 Run **1 single command** to install dependencies, verify system health, and configure Webhooks automatically:
 
 ```bash
 pnpm run setup
+```
+
+When prompted in terminal, enter your target GitHub repository (e.g. `your-username/your-repo`):
+```text
+👉 Enter your target GitHub repository (e.g. user/repo): thienng-it/KobeanREST
+```
+
+*Or pass your target repo directly in 1 line:*
+```bash
+pnpm run setup thienng-it/KobeanREST
 ```
 
 ---
@@ -26,7 +36,8 @@ pnpm run setup
 - 🎯 **What it does**: Automatically writes code, runs unit tests, and opens GitHub Pull Requests when an issue is labeled `ai-build`.
 - 💵 **Cost**: **$0 (100% Free)**.
 - 🔒 **Privacy**: **100% Offline & Private**. Code processing stays on your machine.
-- 🧠 **Dynamic AI Engine**: Auto-discovers whichever local model is installed on the user's computer (`llama3`, `qwen2.5-coder`, `gemma3:12b`, `mistral-nemo`).
+- 🧠 **Dynamic Local AI**: Auto-discovers whichever local model is installed on the user's computer (`llama3`, `qwen2.5-coder`, `gemma3:12b`, `mistral-nemo`).
+- 🔄 **Self-Correction & Memory**: Automatically self-repairs code diffs and remembers past issue resolutions.
 - ⚡ **Setup Time**: **1 Command**.
 
 ---
@@ -34,7 +45,7 @@ pnpm run setup
 ## ⚡ Step-by-Step Guide 1: How to Connect to ANY Repository (60 Seconds)
 
 ### Step 1: Add `.ai-pipeline.yml` to Your Repo Root *(30 Seconds)*
-Create **1 single file** named `.ai-pipeline.yml` in the root directory of your project:
+Create **1 single file** named `.ai-pipeline.yml` in the root directory of your project (or let `pnpm run setup` auto-generate it):
 
 ```yaml
 version: "1.0"
@@ -73,9 +84,22 @@ pipeline:
 
 ---
 
+## 🏛️ Principal Architectural Features
+
+### 1. Iterative Self-Correction & Guardrail Loop
+If a generated code diff fails unit tests or Ponytail guardrails, the Coder Agent automatically analyzes the audit feedback and **repairs its own code diff** before publishing to GitHub.
+
+### 2. Persistent Repository Context Memory
+Stores past issue trajectories, AST context symbols, and resolution patterns in `.ai-memory/repository_memory.json`. The AI gets **progressively smarter** with every PR generated!
+
+### 3. PR Comment Self-Repair Listener (`@ai-pipeline fix`)
+Leave a comment on any open GitHub Pull Request containing `@ai-pipeline fix` to trigger the self-repair loop and automatically update the PR.
+
+---
+
 ## 🖥️ Step-by-Step Guide 2: How to Run & Test the Platform Locally
 
-### Step 1: Clone & Run 1-Command Setup
+### Step 1: Clone & Run Interactive 1-Command Setup
 ```bash
 git clone https://github.com/thienng-it/KobeanAgentic.git
 cd KobeanAgentic
@@ -161,10 +185,14 @@ flowchart TD
 
 ```text
 .
+├── .agents/
+│   ├── skills/                 # AGY repository custom skills
+│   └── rules/                  # AGY coding & guardrail rules
 ├── packages/
 │   ├── engine/                 # Core engine (@enterprise-ai/engine): Temporal state machine, agents, guardrails
 │   │   ├── src/
-│   │   │   ├── agents/         # Planner, TDD Coder, and Reviewer agents
+│   │   │   ├── agents/         # Planner, TDD Coder (Self-Repair), and Reviewer agents
+│   │   │   ├── memory/         # Persistent context memory store (.ai-memory/)
 │   │   │   ├── guardrails/     # Ponytail Decision Ladder rules
 │   │   │   ├── sandbox/        # MicroVM container & Ollama auto-discovery client
 │   │   │   ├── types/          # TypeScript interfaces
@@ -178,7 +206,7 @@ flowchart TD
 │   │   └── tests/              # Python unittest suite
 │   └── github-connector/       # Express & Probot Webhook Connector
 │       ├── src/
-│       │   ├── webhooks/       # Issue labeling & PR comment event handlers
+│       │   ├── webhooks/       # Issue labeling & PR comment (@ai-pipeline fix) handlers
 │       │   ├── worktree/       # Git worktree branch isolation manager
 │       │   ├── server.ts       # Express & Smee.io webhook server
 │       │   └── pr_publisher.ts # GitHub Pull Request publisher
@@ -195,7 +223,7 @@ flowchart TD
 │   │       ├── contents/       # GitHub/Jira DOM overlay action buttons
 │   │       └── background/     # Service worker background API client
 ├── scripts/
-│   ├── setup.ts                # 1-Command setup and health verification script
+│   ├── setup.ts                # 1-Command interactive setup script
 │   └── e2e_dry_run.ts          # End-to-End dry run execution script
 ├── pnpm-workspace.yaml         # PNPM workspace configuration
 ├── package.json                # Monorepo root package definition
