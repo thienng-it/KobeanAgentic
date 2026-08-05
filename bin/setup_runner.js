@@ -1,6 +1,7 @@
 import { execSync } from 'node:child_process';
 import readline from 'node:readline';
 import fs from 'node:fs';
+import path from 'node:path';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -18,6 +19,16 @@ function detectCurrentRepo() {
       return match[1];
     }
   } catch (e) {}
+
+  // Fallback to directory name if inside git repo
+  try {
+    const isGit = fs.existsSync('.git');
+    if (isGit) {
+      const folder = path.basename(process.cwd());
+      return `thienng-it/${folder}`;
+    }
+  } catch (e) {}
+
   return null;
 }
 
@@ -55,11 +66,11 @@ async function runOneCommandSetup() {
     }
 
     if (process.stdin.isTTY) {
-      const defaultPrompt = detectedRepo ? ` [Default: ${detectedRepo}]` : ' (e.g. thienng-it/KobeanREST)';
+      const defaultPrompt = detectedRepo ? ` [Default: ${detectedRepo}]` : ' (e.g. user/repo)';
       const input = await question(`\n👉 Enter target GitHub repository${defaultPrompt}: `);
-      targetRepo = input.trim() || detectedRepo || 'thienng-it/KobeanREST';
+      targetRepo = input.trim() || detectedRepo || 'thienng-it/kobeanqautils';
     } else {
-      targetRepo = detectedRepo || 'thienng-it/KobeanREST';
+      targetRepo = detectedRepo || 'thienng-it/kobeanqautils';
     }
   }
 
@@ -105,10 +116,21 @@ async function runOneCommandSetup() {
     console.log(`  ✓ Webhook active on ${targetRepo}.`);
   }
 
-  const repoFolder = targetRepo.split('/')[1] || 'KobeanREST';
-  const desktopPath = `/Users/josephnguyen/Desktop/${repoFolder}/.ai-pipeline.yml`;
-  const cwdPath = `./.ai-pipeline.yml`;
-  const existingPath = fs.existsSync(desktopPath) ? desktopPath : (fs.existsSync(cwdPath) ? cwdPath : null);
+  // Determine current target directory
+  const cwd = process.cwd();
+  const cwdFolder = path.basename(cwd);
+  const repoFolder = targetRepo.split('/')[1] || cwdFolder;
+
+  let targetDir = cwd;
+  if (cwdFolder.toLowerCase() !== repoFolder.toLowerCase()) {
+    const desktopPath = `/Users/josephnguyen/Desktop/${repoFolder}`;
+    if (fs.existsSync(desktopPath)) {
+      targetDir = desktopPath;
+    }
+  }
+
+  const pipelineConfigPath = path.join(targetDir, '.ai-pipeline.yml');
+  const betterleakConfigPath = path.join(targetDir, '.betterleak');
 
   const configYaml = `# .ai-pipeline.yml configuration for ${targetRepo}
 version: "1.0"
@@ -137,25 +159,23 @@ pipeline:
     comment_trigger: "@ai-pipeline fix"
 `;
 
-  if (existingPath) {
+  if (fs.existsSync(pipelineConfigPath)) {
     console.log(`\n[5/6] Checking .ai-pipeline.yml file status...`);
-    console.log(`  ✓ Found existing config at "${existingPath}". Updating delivery_mode: "${deliveryMode}"...`);
+    console.log(`  ✓ Found existing config at "${pipelineConfigPath}". Updating delivery_mode: "${deliveryMode}"...`);
     try {
-      fs.writeFileSync(existingPath, configYaml);
+      fs.writeFileSync(pipelineConfigPath, configYaml);
       console.log(`  ✓ Updated .ai-pipeline.yml configuration successfully.`);
     } catch (e) {
       console.log(`  ✓ Preserved existing .ai-pipeline.yml configuration.`);
     }
   } else {
     console.log(`\n[5/6] Creating new .ai-pipeline.yml config file...`);
-    const targetFile = desktopPath;
     try {
-      fs.writeFileSync(targetFile, configYaml);
-      console.log(`  ✓ Auto-generated new .ai-pipeline.yml at "${targetFile}".`);
+      fs.writeFileSync(pipelineConfigPath, configYaml);
+      console.log(`  ✓ Auto-generated new .ai-pipeline.yml at "${pipelineConfigPath}".`);
     } catch (e) {}
   }
 
-  const betterleakPath = `/Users/josephnguyen/Desktop/${repoFolder}/.betterleak`;
   const betterleakYaml = `# .betterleak security configuration for ${targetRepo}
 version: "1.0"
 scanner:
@@ -180,8 +200,8 @@ ignore_paths:
 
   console.log(`\n[6/6] Auto-generating .betterleak security config...`);
   try {
-    fs.writeFileSync(betterleakPath, betterleakYaml);
-    console.log(`  ✓ Auto-generated .betterleak security config at "${betterleakPath}".`);
+    fs.writeFileSync(betterleakConfigPath, betterleakYaml);
+    console.log(`  ✓ Auto-generated .betterleak security config at "${betterleakConfigPath}".`);
   } catch (e) {
     console.log(`  ✓ Security config ready.`);
   }
