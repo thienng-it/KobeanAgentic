@@ -31,6 +31,9 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
+      - name: BetterLeak Security & Sensitive Data Scan
+        run: npx vitest run packages/engine/tests/betterleak_scanner.test.ts
+
       - name: Publish Package to NPM
         run: |
           npm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN}
