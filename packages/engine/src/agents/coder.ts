@@ -1,8 +1,17 @@
 import type { ExecutionPlan, TDDStageResult } from '../types/index.ts';
 import { executeSandboxCommand } from '../sandbox/e2b_runner.ts';
+import { queryLocalOllama } from '../sandbox/ollama_client.ts';
 
 export async function runTDDCycle(plan: ExecutionPlan, worktreePath: string): Promise<TDDStageResult[]> {
   const history: TDDStageResult[] = [];
+
+  // Query local Ollama HTTP client if available
+  const ollamaCheck = await queryLocalOllama('llama3', `Write a unit test for requirement: ${plan.specId}`);
+  if (!ollamaCheck.success) {
+    console.log(`\n⚠️  [Ollama Status] ${ollamaCheck.error}`);
+  } else {
+    console.log(`\n🟢 [Ollama Live Output] Response received from Llama3 model.`);
+  }
 
   // Stage 1: RED (Failing test created)
   const redResult = await executeSandboxCommand({

@@ -1,6 +1,7 @@
 export * from './types/index.ts';
 export * from './guardrails/ponytail.ts';
 export * from './sandbox/e2b_runner.ts';
+export * from './sandbox/ollama_client.ts';
 export * from './agents/planner.ts';
 export * from './agents/coder.ts';
 export * from './agents/reviewer.ts';
