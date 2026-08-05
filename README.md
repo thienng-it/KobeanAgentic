@@ -1,6 +1,7 @@
 # 🚀 Enterprise AI Pipeline Platform
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![NPM Package](https://img.shields.io/badge/npm-kobean--agentic-red.svg)](https://www.npmjs.com)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org)
 [![Python Version](https://img.shields.io/badge/python-%3E%3D3.10-blue.svg)](https://www.python.org)
 [![Monorepo: pnpm](https://img.shields.io/badge/monorepo-pnpm-orange.svg)](https://pnpm.io)
@@ -8,6 +9,23 @@
 [![AI Providers: Cloud & Local](https://img.shields.io/badge/ai%20providers-Cloud%20API%20%2B%20Local%20Ollama-purple.svg)](https://ollama.com)
 
 An enterprise-grade, zero-touch autonomous AI engineering platform that transforms GitHub issues into verified, test-proven Pull Requests automatically.
+
+---
+
+## 📦 NPM Package Usage (Pull & Use Instantly)
+
+Any developer can run the platform directly from **npm** without cloning the repo:
+
+### 1️⃣ Run Instantly via `npx` (Zero Install)
+```bash
+npx kobean-agentic setup
+```
+
+### 2️⃣ Install Globally via `npm`
+```bash
+npm install -g kobean-agentic
+kobean-agentic setup
+```
 
 ---
 
@@ -31,6 +49,21 @@ kobean-agentic setup thienng-it/KobeanREST
 
 ---
 
+## 🚀 How to Publish Updates to NPM Registry
+
+To publish new versions to npm:
+
+1. **Login to NPM** *(one-time setup)*:
+   ```bash
+   npm login
+   ```
+2. **Publish Package**:
+   ```bash
+   npm publish --access public
+   ```
+
+---
+
 ## 📌 Quick Summary
 
 - 🎯 **What it does**: Automatically writes code, runs unit tests, and opens GitHub Pull Requests when an issue is labeled `ai-build`.
@@ -38,42 +71,14 @@ kobean-agentic setup thienng-it/KobeanREST
 - 🔒 **Privacy**: Code processing stays local or uses your configured cloud API keys.
 - 📡 **Automated Webhook Channels**: Automatically creates a dedicated Smee.io Webhook channel programmatically.
 - 🔄 **Self-Correction & Memory**: Automatically self-repairs code diffs and remembers past issue resolutions.
-- ⚡ **Setup Time**: **1 Command (`kobean-agentic setup`)**.
-
----
-
-## 🔑 How to Configure Cloud AI API Keys or Local Ollama
-
-You can supply API keys via environment variables, `.env`, or repository settings:
-
-### 1️⃣ Cloud AI API Keys (Optional)
-
-Set any of these environment variables in your terminal or `.env` file:
-
-```bash
-# OpenAI (ChatGPT: gpt-4o, gpt-4o-mini)
-export OPENAI_API_KEY="sk-..."
-
-# Anthropic (Claude: claude-3-5-sonnet)
-export ANTHROPIC_API_KEY="sk-ant-..."
-
-# Google Gemini (gemini-1.5-flash, gemini-1.5-pro)
-export GEMINI_API_KEY="AIzaSy..."
-
-# DeepSeek (deepseek-chat, deepseek-coder)
-export DEEPSEEK_API_KEY="sk-..."
-```
-
-### 2️⃣ Local & Offline Mode (Ollama - $0 Free)
-
-If no Cloud API Keys are set, the platform **automatically falls back to Local Ollama Auto-Discovery** on `http://localhost:11434` (`gemma3:12b`, `qwen2.5-coder`, `llama3`, `mistral-nemo`).
+- ⚡ **Setup Time**: **1 Command (`npx kobean-agentic setup`)**.
 
 ---
 
 ## ⚡ Step-by-Step Guide 1: How to Connect to ANY Repository (60 Seconds)
 
 ### Step 1: Run 1-Command Setup *(30 Seconds)*
-Run `kobean-agentic setup your-username/your-repo`. The CLI automatically:
+Run `npx kobean-agentic setup your-username/your-repo`. The CLI automatically:
 1. Auto-generates your dedicated **Smee.io Webhook Proxy Channel**.
 2. Registers the Webhook on your GitHub repository via GitHub CLI.
 3. Creates the `.ai-pipeline.yml` configuration file in your project root!
@@ -127,7 +132,7 @@ Stores past issue trajectories, AST context symbols, and resolution patterns in 
 ```bash
 git clone https://github.com/thienng-it/KobeanAgentic.git
 cd KobeanAgentic
-kobean-agentic setup
+npx kobean-agentic setup
 ```
 
 ### Step 2: Run Automated Test Suites
@@ -136,14 +141,30 @@ kobean-agentic setup
 python3 packages/graph-indexer/tests/test_indexer.py
 
 # Run 1-Command E2E Dry Run Execution Script
-kobean-agentic dry-run
+npx kobean-agentic dry-run
 ```
 
 ### Step 3: Launch Next.js Management Control Console
 ```bash
-kobean-agentic dev
+npx kobean-agentic dev
 ```
 Open **`http://localhost:3001`** in your browser to view active workflows, live logs, and the interactive Temporal Workflow DAG.
+
+---
+
+## 🧠 Dynamic Per-User Local AI Auto-Discovery
+
+The platform automatically detects whichever local AI model is installed on the user's computer via Ollama (`http://localhost:11434`):
+
+```
+User Computer A (gemma3:12b)      ──► Engine uses gemma3:12b
+User Computer B (qwen2.5-coder) ──► Engine uses qwen2.5-coder
+User Computer C (llama3)         ──► Engine uses llama3
+```
+
+- **Zero Cloud API Keys Required**.
+- **Zero API Costs**.
+- **100% Privacy Guarantee**.
 
 ---
 
@@ -194,7 +215,7 @@ flowchart TD
 ```text
 .
 ├── bin/
-│   └── kobean-agentic.js       # CLI binary executable (kobean-agentic setup)
+│   └── kobean-agentic.js       # NPM CLI binary executable (kobean-agentic setup)
 ├── .agents/
 │   ├── skills/                 # AGY repository custom skills
 │   └── rules/                  # AGY coding & guardrail rules
@@ -236,7 +257,7 @@ flowchart TD
 │   ├── setup.ts                # 1-Command interactive setup script with auto Smee generation
 │   └── e2e_dry_run.ts          # End-to-End dry run execution script
 ├── pnpm-workspace.yaml         # PNPM workspace configuration
-├── package.json                # Monorepo root package definition
+├── package.json                # NPM package manifest
 └── README.md
 ```
 

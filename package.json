@@ -1,11 +1,14 @@
 {
-  "name": "enterprise-ai-pipeline-platform",
+  "name": "kobean-agentic",
   "version": "1.0.0",
-  "private": true,
+  "description": "Zero-touch Enterprise AI Pipeline Platform & CLI",
   "type": "module",
-  "description": "Zero-touch Enterprise AI Pipeline Platform Monorepo",
+  "main": "bin/kobean-agentic.js",
   "bin": {
     "kobean-agentic": "./bin/kobean-agentic.js"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "kobean-agentic": "node ./bin/kobean-agentic.js",
