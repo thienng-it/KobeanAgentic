@@ -7,16 +7,16 @@ export default function SettingsPage() {
 version: "1.0"
 pipeline:
   sandbox:
-    isolation: "e2b" # e2b | docker | process
+    isolation: "docker" # docker | e2b | process
     timeout_seconds: 300
   guardrails:
     ponytail_strict: true
     max_diff_lines: 500
     allow_new_deps: false
   agents:
-    planner_model: "gemini-3.6-pro"
-    coder_model: "gemini-3.6-flash"
-    reviewer_model: "gemini-3.6-pro"
+    planner_model: "ollama/llama3"
+    coder_model: "ollama/llama3"
+    reviewer_model: "ollama/llama3"
   github:
     auto_pr: true
     trigger_label: "ai-build"
