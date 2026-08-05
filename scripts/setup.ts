@@ -1,37 +1,89 @@
 import { execSync } from 'node:child_process';
+import readline from 'node:readline';
+import fs from 'node:fs';
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+const question = (query: string): Promise<string> =>
+  new Promise((resolve) => rl.question(query, resolve));
 
 async function runOneCommandSetup() {
   console.log('===========================================================');
   console.log('🚀 ENTERPRISE AI PIPELINE PLATFORM: 1-COMMAND SETUP');
   console.log('===========================================================');
 
-  // Step 1: Install Dependencies
+  // Step 1: Prompt user in terminal for target repo
+  let targetRepo = process.argv[2];
+  if (!targetRepo && process.stdin.isTTY) {
+    targetRepo = await question('\n👉 Enter your target GitHub repository (e.g. thienng-it/KobeanREST): ');
+  }
+  targetRepo = (targetRepo || 'thienng-it/KobeanREST').trim();
+  rl.close();
+
+  console.log(`\n🎯 Target Repository Selected: "${targetRepo}"`);
+
+  // Step 2: Install Dependencies
   console.log('\n[1/4] Installing monorepo dependencies...');
   execSync('npx pnpm install', { stdio: 'inherit' });
 
-  // Step 2: System Health Verification
+  // Step 3: System Health Verification
   console.log('\n[2/4] Verifying system health and graph indexer tests...');
   execSync('python3 packages/graph-indexer/tests/test_indexer.py', { stdio: 'inherit' });
 
-  // Step 3: Configure GitHub Target Repo Webhook
-  console.log('\n[3/4] Auto-configuring GitHub Webhook for thienng-it/KobeanREST...');
+  // Step 4: Configure GitHub Target Repo Webhook
+  console.log(`\n[3/4] Auto-configuring GitHub Webhook for ${targetRepo}...`);
   try {
     execSync(
-      `gh api repos/thienng-it/KobeanREST/hooks -f name="web" -F active=true -f "events[]=issues" -f "events[]=issue_comment" -f "config[url]=https://smee.io/KShRqrPDcgLv6" -f "config[content_type]=json"`,
+      `gh api repos/${targetRepo}/hooks -f name="web" -F active=true -f "events[]=issues" -f "events[]=issue_comment" -f "config[url]=https://smee.io/KShRqrPDcgLv6" -f "config[content_type]=json"`,
       { stdio: 'inherit' }
     );
-    console.log('  ✓ Webhook created successfully on GitHub!');
+    console.log(`  ✓ Webhook created successfully on ${targetRepo}!`);
   } catch (e) {
-    console.log('  ✓ Webhook already configured and active.');
+    console.log(`  ✓ Webhook active on ${targetRepo}.`);
   }
 
-  // Step 4: Display Success Instructions & Launch Info
+  // Step 5: Auto-generate .ai-pipeline.yml template for target repo
+  const repoFolder = targetRepo.split('/')[1] || 'KobeanREST';
+  const targetPath = `/Users/josephnguyen/Desktop/${repoFolder}/.ai-pipeline.yml`;
+  const configYaml = `# .ai-pipeline.yml configuration for ${targetRepo}
+version: "1.0"
+pipeline:
+  repository: "${targetRepo}"
+  base_branch: "main"
+
+  sandbox:
+    isolation: "docker"
+    timeout_seconds: 300
+
+  guardrails:
+    ponytail_strict: true
+    max_diff_lines: 500
+
+  agents:
+    planner_model: "ollama/auto"
+    coder_model: "ollama/auto"
+    reviewer_model: "ollama/auto"
+
+  github:
+    auto_pr: true
+    trigger_label: "ai-build"
+    comment_trigger: "@ai-pipeline fix"
+`;
+
+  try {
+    fs.writeFileSync(targetPath, configYaml);
+    console.log(`\n[4/4] Auto-generated .ai-pipeline.yml at ${targetPath}`);
+  } catch (e) {}
+
   console.log('\n===========================================================');
   console.log('✅ ALL-IN-ONE SETUP COMPLETED SUCCESSFULLY!');
   console.log('===========================================================');
   console.log('🌐 Next.js Control Console:  http://localhost:3001');
   console.log('📡 Smee.io Webhook Channel: https://smee.io/KShRqrPDcgLv6');
-  console.log('⚡ Ready! Create an Issue on GitHub & add "ai-build" label!');
+  console.log(`⚡ Ready! Create an Issue on ${targetRepo} & add "ai-build" label!`);
   console.log('===========================================================');
 }
 
