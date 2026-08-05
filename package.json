@@ -5,6 +5,7 @@
   "type": "module",
   "description": "Zero-touch Enterprise AI Pipeline Platform Monorepo",
   "scripts": {
+    "setup": "node --experimental-strip-types scripts/setup.ts",
     "build": "pnpm --recursive run build",
     "test": "pnpm --recursive run test",
     "lint": "pnpm --recursive run lint",
