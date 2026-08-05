@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@enterprise-ai/engine": "workspace:*",
-    "express": "^4.19.2",
+    "express": "^4.21.2",
     "octokit": "^3.1.2",
     "probot": "^13.0.1",
     "smee-client": "^2.0.1"
