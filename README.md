@@ -1,7 +1,7 @@
 # 🚀 Enterprise AI Pipeline Platform
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![NPM Package](https://img.shields.io/badge/npm-%40josephnguyent%2Fkobean--agentic-red.svg)](https://www.npmjs.com)
+[![NPM Package](https://img.shields.io/badge/npm-%40josephnguyent%2Fkobean--agentic-red.svg)](https://www.npmjs.com/package/@josephnguyent/kobean-agentic)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org)
 [![Python Version](https://img.shields.io/badge/python-%3E%3D3.10-blue.svg)](https://www.python.org)
 [![Monorepo: pnpm](https://img.shields.io/badge/monorepo-pnpm-orange.svg)](https://pnpm.io)
@@ -15,7 +15,7 @@ An enterprise-grade, zero-touch autonomous AI engineering platform that transfor
 Run **1 single command** in your terminal to set up any GitHub repository automatically:
 
 ```bash
-npx @josephnguyent/kobean-agentic setup
+npx @josephnguyent/kobean-agentic@latest setup
 ```
 
 ---
@@ -24,7 +24,7 @@ npx @josephnguyent/kobean-agentic setup
 
 1. **Run Setup**:
    ```bash
-   npx @josephnguyent/kobean-agentic setup
+   npx @josephnguyent/kobean-agentic@latest setup
    ```
 2. **Enter Your Target Repo** when prompted in terminal:
    ```text
