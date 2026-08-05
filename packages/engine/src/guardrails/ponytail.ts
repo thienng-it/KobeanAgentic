@@ -1,10 +1,12 @@
 import type { PonytailAuditResult } from '../types/index.ts';
+import { scanForSensitiveLeaks } from './betterleak_scanner.ts';
 
 /**
- * Ponytail Decision Ladder Guardrails:
- * 1. YAGNI: Reject unrequested dependencies & over-engineering
- * 2. StdLib: Prefer standard library over external npm packages
- * 3. Minimal Diff: Restrict excessive diff noise
+ * Ponytail Decision Ladder Guardrails & BetterLeak Security Scanner:
+ * 1. BetterLeak: Scan for sensitive data leaks (API keys, tokens, secrets)
+ * 2. YAGNI: Reject unrequested dependencies & over-engineering
+ * 3. StdLib: Prefer standard library over external npm packages
+ * 4. Minimal Diff: Restrict excessive diff noise
  */
 export function evaluatePonytailGuardrails(
   diffContent: string,
@@ -13,6 +15,15 @@ export function evaluatePonytailGuardrails(
   const violations: string[] = [];
   const recommendations: string[] = [];
   let score = 100;
+
+  // BetterLeak Security Check
+  const leakResult = scanForSensitiveLeaks(diffContent);
+  if (leakResult.hasLeaks) {
+    for (const leak of leakResult.leaks) {
+      violations.push(`BetterLeak Security Violation: Detected ${leak.type} leak on line ${leak.line}`);
+      score -= 50;
+    }
+  }
 
   // Rule 1: Check YAGNI & new dependency additions
   const allowedNativeLibs = ['lodash', 'vitest', 'typescript'];
@@ -34,7 +45,7 @@ export function evaluatePonytailGuardrails(
   }
 
   if (violations.length === 0) {
-    recommendations.push('Clean minimalist code structure aligned with Ponytail rules.');
+    recommendations.push('Clean minimalist code structure & BetterLeak security verified (0 leaks detected).');
   }
 
   return {
