@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+.next/
+out/
+build/
+
+# Cache
+__pycache__/
+*.pyc
+.cache/
+.vite/
+
+# Worktree temp directories
+ai_worktrees/
+scratch/
+.ds_store
+.DS_Store
