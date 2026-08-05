@@ -11,7 +11,7 @@ const command = process.argv[2] || 'setup';
 const args = process.argv.slice(3);
 
 if (command === 'setup') {
-  spawnSync('node', ['--experimental-strip-types', path.join(rootDir, 'scripts/setup.ts'), ...args], {
+  spawnSync('node', [path.join(rootDir, 'bin/setup_runner.js'), ...args], {
     cwd: rootDir,
     stdio: 'inherit'
   });
