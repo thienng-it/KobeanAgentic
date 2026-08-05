@@ -1,0 +1,12 @@
+{
+  "name": "@enterprise-ai/browser-extension",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Manifest V3 Chrome Extension overlaying GitHub/Jira with Enterprise AI Pipeline trigger actions",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}

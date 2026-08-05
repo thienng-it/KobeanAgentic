@@ -1,0 +1,20 @@
+{
+  "name": "@enterprise-ai/github-connector",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test tests/*.test.ts"
+  },
+  "dependencies": {
+    "@enterprise-ai/engine": "workspace:*",
+    "octokit": "^3.1.2",
+    "probot": "^13.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
+  }
+}

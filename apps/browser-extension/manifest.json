@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Enterprise AI Pipeline Overlay",
+  "version": "1.0.0",
+  "description": "Inject zero-touch AI pipeline trigger buttons directly into GitHub Issues, PRs, and Jira boards.",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": ["https://github.com/*", "https://*.atlassian.net/*"],
+  "background": {
+    "service_worker": "dist/background/service_worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://github.com/*/*/issues/*", "https://github.com/*/*/pull/*"],
+      "js": ["dist/contents/github_overlay.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "action": {
+    "default_title": "Enterprise AI Pipeline"
+  }
+}

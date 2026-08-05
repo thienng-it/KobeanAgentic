@@ -1,0 +1,21 @@
+{
+  "name": "enterprise-ai-pipeline-platform",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Zero-touch Enterprise AI Pipeline Platform Monorepo",
+  "scripts": {
+    "build": "pnpm --recursive run build",
+    "test": "pnpm --recursive run test",
+    "lint": "pnpm --recursive run lint",
+    "dev": "pnpm --recursive --parallel run dev"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}
