@@ -1,7 +1,7 @@
 # 🚀 Enterprise AI Pipeline Platform
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![NPM Package](https://img.shields.io/badge/npm-kobean--agentic-red.svg)](https://www.npmjs.com)
+[![NPM Package](https://img.shields.io/badge/npm-%40thienng--it%2Fkobean--agentic-red.svg)](https://www.npmjs.com)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org)
 [![Python Version](https://img.shields.io/badge/python-%3E%3D3.10-blue.svg)](https://www.python.org)
 [![Monorepo: pnpm](https://img.shields.io/badge/monorepo-pnpm-orange.svg)](https://pnpm.io)
@@ -14,16 +14,16 @@ An enterprise-grade, zero-touch autonomous AI engineering platform that transfor
 
 ## 📦 NPM Package Usage (Pull & Use Instantly)
 
-Any developer can run the platform directly from **npm** without cloning the repo:
+Any developer can run the platform directly from **npm**:
 
 ### 1️⃣ Run Instantly via `npx` (Zero Install)
 ```bash
-npx kobean-agentic setup
+npx @thienng-it/kobean-agentic setup
 ```
 
 ### 2️⃣ Install Globally via `npm`
 ```bash
-npm install -g kobean-agentic
+npm install -g @thienng-it/kobean-agentic
 kobean-agentic setup
 ```
 
@@ -34,7 +34,7 @@ kobean-agentic setup
 Run **`kobean-agentic setup`** to install dependencies, auto-create a dedicated Smee.io channel, and configure Webhooks automatically:
 
 ```bash
-kobean-agentic setup
+npx @thienng-it/kobean-agentic setup
 ```
 
 When prompted in terminal, enter your target GitHub repository (e.g. `your-username/your-repo`):
@@ -44,16 +44,16 @@ When prompted in terminal, enter your target GitHub repository (e.g. `your-usern
 
 *Or pass your target repo directly in 1 line:*
 ```bash
-kobean-agentic setup thienng-it/KobeanREST
+npx @thienng-it/kobean-agentic setup thienng-it/KobeanREST
 ```
 
 ---
 
-## 🚀 How to Publish Updates to NPM Registry
+## 🚀 How to Publish Package to NPM Registry
 
-To publish new versions to npm:
+To publish to NPM:
 
-1. **Login to NPM** *(one-time setup)*:
+1. **Log in to NPM in your terminal**:
    ```bash
    npm login
    ```
@@ -71,14 +71,14 @@ To publish new versions to npm:
 - 🔒 **Privacy**: Code processing stays local or uses your configured cloud API keys.
 - 📡 **Automated Webhook Channels**: Automatically creates a dedicated Smee.io Webhook channel programmatically.
 - 🔄 **Self-Correction & Memory**: Automatically self-repairs code diffs and remembers past issue resolutions.
-- ⚡ **Setup Time**: **1 Command (`npx kobean-agentic setup`)**.
+- ⚡ **Setup Time**: **1 Command (`npx @thienng-it/kobean-agentic setup`)**.
 
 ---
 
 ## ⚡ Step-by-Step Guide 1: How to Connect to ANY Repository (60 Seconds)
 
 ### Step 1: Run 1-Command Setup *(30 Seconds)*
-Run `npx kobean-agentic setup your-username/your-repo`. The CLI automatically:
+Run `npx @thienng-it/kobean-agentic setup your-username/your-repo`. The CLI automatically:
 1. Auto-generates your dedicated **Smee.io Webhook Proxy Channel**.
 2. Registers the Webhook on your GitHub repository via GitHub CLI.
 3. Creates the `.ai-pipeline.yml` configuration file in your project root!
@@ -132,7 +132,7 @@ Stores past issue trajectories, AST context symbols, and resolution patterns in 
 ```bash
 git clone https://github.com/thienng-it/KobeanAgentic.git
 cd KobeanAgentic
-npx kobean-agentic setup
+npx @thienng-it/kobean-agentic setup
 ```
 
 ### Step 2: Run Automated Test Suites
@@ -141,12 +141,12 @@ npx kobean-agentic setup
 python3 packages/graph-indexer/tests/test_indexer.py
 
 # Run 1-Command E2E Dry Run Execution Script
-npx kobean-agentic dry-run
+npx @thienng-it/kobean-agentic dry-run
 ```
 
 ### Step 3: Launch Next.js Management Control Console
 ```bash
-npx kobean-agentic dev
+npx @thienng-it/kobean-agentic dev
 ```
 Open **`http://localhost:3001`** in your browser to view active workflows, live logs, and the interactive Temporal Workflow DAG.
 
@@ -215,7 +215,7 @@ flowchart TD
 ```text
 .
 ├── bin/
-│   └── kobean-agentic.js       # NPM CLI binary executable (kobean-agentic setup)
+│   └── kobean-agentic.js       # NPM CLI binary executable
 ├── .agents/
 │   ├── skills/                 # AGY repository custom skills
 │   └── rules/                  # AGY coding & guardrail rules
@@ -257,7 +257,7 @@ flowchart TD
 │   ├── setup.ts                # 1-Command interactive setup script with auto Smee generation
 │   └── e2e_dry_run.ts          # End-to-End dry run execution script
 ├── pnpm-workspace.yaml         # PNPM workspace configuration
-├── package.json                # NPM package manifest
+├── package.json                # Scoped NPM package manifest (@thienng-it/kobean-agentic)
 └── README.md
 ```
 

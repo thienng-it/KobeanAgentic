@@ -1,5 +1,5 @@
 {
-  "name": "kobean-agentic",
+  "name": "@thienng-it/kobean-agentic",
   "version": "1.0.0",
   "description": "Zero-touch Enterprise AI Pipeline Platform & CLI",
   "type": "module",
